@@ -1,0 +1,10 @@
+response = requests.post('http://127.0.0.1:8000/input/' + user_queue[0] + '/', 
+headers={ 'content-Type': 'application/json'}, data= '{"id":"' + data[user_queue[0]][0] + '",
+"inc_type":"' + data[user_queue[0]][2] + '", "inc_detail":"' + data[user_queue[0]][3] + '",
+"lat":"'+ data[user_queue[0]][5] + '", "lon":"' + data[user_queue[0]][6] + '",
+"url":"' + data[user_queue[0]][7] + '", "pic":"' + data[user_queue[0]][4] + '",
+"is_active":"True"}')
+
+
+requests.post('http://127.0.0.1:8000/invalid_input/' + user_queue[0] + '/', headers={ 'content-Type': 'application/json'},
+data='{"id":"' + data[user_queue[0]][0] + '", "data":"' + data[user_queue[0]] + '"}')
