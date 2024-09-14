@@ -1,0 +1,11 @@
+[Unit]
+Description=Audio Relay Pulse Service
+After=arelay-ofono.service
+ 
+[Service]
+ExecStart=/bin/bash /home/qa/remote-audio-services/apulse.sh
+WorkingDirectory=/home/qa/remote-audio-services/
+#User=qa
+ 
+[Install]
+WantedBy=multi-user.target

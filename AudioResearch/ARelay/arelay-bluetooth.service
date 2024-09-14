@@ -1,0 +1,11 @@
+[Unit]
+Description=Audio Relay Bluetooth Service
+After=arelay-pulse.service
+ 
+[Service]
+ExecStart=/bin/bash /home/qa/remote-audio-services/abt.sh
+WorkingDirectory=/home/qa/remote-audio-services/
+User=qa
+ 
+[Install]
+WantedBy=multi-user.target

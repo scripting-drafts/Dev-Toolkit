@@ -1,0 +1,9 @@
+[Unit]
+Description=Audio Relay Pulse Service Timer
+
+[Timer]
+OnBootSec=1m
+Unit=arelay-pulse.service
+
+[Install]
+WantedBy=multi-user.target

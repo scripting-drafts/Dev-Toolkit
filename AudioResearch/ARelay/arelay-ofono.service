@@ -1,0 +1,11 @@
+[Unit]
+Description=Audio Relay oFono Service
+After=network-online.target
+ 
+[Service]
+ExecStart=/bin/bash /home/qa/remote-audio-services/aofono.sh
+WorkingDirectory=/home/qa/remote-audio-services/
+User=qa
+ 
+[Install]
+WantedBy=multi-user.target
