@@ -4,7 +4,7 @@
 
 Precompiled builds:  
   
-[![Download arelay](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/arelay/files/latest/download)  
+[![Download arelay](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/arelay/files/arelay.img/download)  
   
 Requirements:
  - [Raspbian 10](https://downloads.raspberrypi.org/raspbian/images/raspbian-2020-02-14/2020-02-13-raspbian-buster.zip) (32bit Debian Buster)
