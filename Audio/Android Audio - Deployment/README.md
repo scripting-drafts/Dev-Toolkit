@@ -2,9 +2,9 @@
 
 ### HFP client with ffmpeg tunneling
 
-Precompiled build:
-[![Download arelay](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/arelay/files/latest/download)
-
+Precompiled build:  
+[![Download arelay](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/arelay/files/latest/download)  
+  
 Requirements:
  - [Raspbian 10](https://downloads.raspberrypi.org/raspbian/images/raspbian-2020-02-14/2020-02-13-raspbian-buster.zip) (32bit Debian Buster)
  - Raspberry Pi 3b or Zero W
