@@ -3,7 +3,7 @@ Audio Relay ![info](https://github.com/scripting-drafts/Dev-Toolkit/tree/main/Au
   
 [![Download arelay](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/arelay/files/arelay.img/download)  
 
-Audiostrap ![info](https://github.com/scripting-drafts/Dev-Toolkit/blob/main/Audio/Peripherals/OSC%20Messaging)  
+Audiostrap ![info](https://github.com/scripting-drafts/Dev-Toolkit/tree/main/Audio/Peripherals/OSC%20Messaging%20-%20Audiostrap)  
 
 [![Download arelay](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/audiostrap/files/Audiostrap.dmg/download)  
   
