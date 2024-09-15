@@ -2,8 +2,10 @@
 
 ### HFP client with ffmpeg tunneling
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://github.com/scripting-drafts/Audio-Relay/)
-
+Precompiled builds:  
+  
+[![Download arelay](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/arelay/files/arelay.img/download)  
+  
 Requirements:
  - [Raspbian 10](https://downloads.raspberrypi.org/raspbian/images/raspbian-2020-02-14/2020-02-13-raspbian-buster.zip) (32bit Debian Buster)
  - Raspberry Pi 3b or Zero W
