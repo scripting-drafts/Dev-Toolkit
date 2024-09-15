@@ -10,9 +10,7 @@ if not os.path.exists('original_pcaps'):
     os.makedirs('original_pcaps')
 
 fix_cut_packet = call(["python", "pcap-fix.py", "--in", capture_file + ".pcap", "--pcapfix", "--pcapfix_dir", "original_pcaps", "--debug"])
-
 cap = pyshark.FileCapture(capture_file + "-fixed.pcap", display_filter='udp')
-
 ports = [p[p.transport_layer].dstport for p in cap if p[p.transport_layer].dstport != "53"]
 
 for x in range(len(ports)):
