@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Good Bernoulli</string>
+    <string name="flip" translatable="false">Flip</string>
+</resources>
