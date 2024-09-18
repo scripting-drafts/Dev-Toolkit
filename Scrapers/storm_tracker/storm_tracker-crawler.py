@@ -56,7 +56,7 @@ def is_valid(url):
     parsed = urlparse(url)
     return bool(parsed.netloc) and bool(parsed.scheme)
 
-def move_page(url, status_code):
+def move_page(url, status_code, notfounderrors):
     '''Moves pages'''
     done_flag = False
 
@@ -65,60 +65,69 @@ def move_page(url, status_code):
         following_page = int(url_last_part)+25
         following_page = url.replace(url_last_part, str(following_page))
 
-    elif status_code != 200:
+    else:
         url_last_part = url.split('/')[-1]
-        following_page = url.remove(url_last_part) + 0
-        letter_index = alphabet.index(url.split('/')[-3])
+        following_page = url.replace(url_last_part, '0')
+        current_letter = url.split('/')[-3]
+        letter_index = alphabet.index(current_letter)
 
-        if letter_index is not alphabet.index('Z'):
-            following_page = re.sub(following_page, r'[A-Z]', alphabet.split()[letter_index + 1])
+        if notfounderrors < 3:
+            if current_letter != 'Z':
+                l = '/' + alphabet[letter_index + 1] + '/'
+                following_page = re.sub(re.compile(r'(\/)[A-Z](\/)'), l, following_page)
+                notfounderrors = 0
 
-        elif alphabet.index('Z'):
+        elif notfounderrors >= 3:
             done_flag = True
-    
-    return following_page, done_flag
+
+    return following_page, done_flag, notfounderrors
 
 def get_all_website_links(url, pattern_level='third_level', links_level=third_level_links):
     '''Returns all URLs that is found on `url` in which it belongs to the same website'''
     url = url + '/list/A/4/0'
+    notfounderrors = 0
+    done_flag = None
 
     while True:
         log.debug(f"{GRAY}[*] Crawling: {url}{RESET}")
-        response = requests.get(url)
+        response = requests.get(url, allow_redirects=False)
         sc = response.status_code
 
         if sc == 200:
             soup = BeautifulSoup(response.content, "html.parser")
+            for a_tag in soup.findAll("a"):
+                href = a_tag.attrs.get("href")
+                if href != "" or href is not None:
+                    href = urljoin(url, href)
+                    parsed_href = urlparse(href)
+
+                    ## Remove URL GET parameters, URL fragments, etc.
+                    href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
+
+                    if is_valid(href):
+                        if re.match(patterns[pattern_level], href):
+                            # log.debug(f"{GREEN}[*] Internal link: {href}{RESET}")
+                            links_level.add(href)
+
+        elif sc == 302:
+            if notfounderrors < 3:
+                notfounderrors += 1
+
+                if notfounderrors == 1:
+                    log.debug(f'[{notfounderrors}] Next page incoming')
+            else:
+                log.debug(f'[{notfounderrors}] Status Code: 302')
+                done_flag = True
+                notfounderrors = 0                
         else:
             if url.endswith('/list/A/4/0'):
                 raise AssertionError('URL not found')
-            elif url.split('/')[-3] == 'Z':
-                log.debug(f'Stopped @ {url}')
-                break
 
-        for a_tag in soup.findAll("a"):
-            href = a_tag.attrs.get("href")
-            if href != "" or href is not None:
-                href = urljoin(url, href)
-                parsed_href = urlparse(href)
-
-                ## Remove URL GET parameters, URL fragments, etc.
-                href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
-
-                if is_valid(href):
-                    if re.match(patterns[pattern_level], href):
-                        log.debug(f"{GREEN}[*] Internal link: {href}{RESET}")
-                        links_level.add(href)
-                else:
-                    continue
-            else:
-                continue
-
-        url, done_flag = move_page(url, sc)
-        
         if done_flag is True:
             log.debug(f'Stopped @ {url}')
             break
+
+        url, done_flag, notfounderrors = move_page(url, sc, notfounderrors)
 
     add_to_csv(list(links_level))
     
