@@ -36,7 +36,7 @@ patterns = {
     'first_level': re.compile(r'^(https:\/\/worldcam\.eu\/webcams\/)[a-z-\-?]$'),
     'second_level': re.compile(r'^(https:\/\/worldcam\.eu\/webcams\/)[a-z-\-?]+\/[a-z-\-?]+$'),
     'third_level': re.compile(r'^(https:\/\/worldcam\.eu\/webcams\/)[a-z-\-?]+\/[a-z-\-?]+\/[0-9-a-z\-?]+$')
-}   #https://worldcam.eu/webcams/europe/austria/32126-eisenerz-erzberg-arena
+}
 
 def plus_one_item_in_list(list):
     try:
@@ -84,7 +84,7 @@ def move_page(url, status_code, notfounderrors):
 
 def get_all_website_links(url, pattern_level='third_level', links_level=third_level_links):
     '''Returns all URLs that is found on `url` in which it belongs to the same website'''
-    url = url + '/list/A/4/0'
+    url = url + '/list/V/4/0'
     notfounderrors = 0
     done_flag = None
 
@@ -106,9 +106,9 @@ def get_all_website_links(url, pattern_level='third_level', links_level=third_le
 
                     if is_valid(href):
                         if re.match(patterns[pattern_level], href):
-                            # log.debug(f"{GREEN}[*] Internal link: {href}{RESET}")
+                            log.debug(f"{GREEN}[*] Internal link: {href}{RESET}")
                             links_level.add(href)
-
+                            
         elif sc == 302:
             if notfounderrors < 3:
                 notfounderrors += 1
@@ -128,6 +128,8 @@ def get_all_website_links(url, pattern_level='third_level', links_level=third_le
             break
 
         url, done_flag, notfounderrors = move_page(url, sc, notfounderrors)
+
+    print(links_level)
 
     add_to_csv(list(links_level))
     
@@ -215,10 +217,9 @@ except Exception:
         dict_writer.writerows(datalist)
 
 finally:
-    if plus_one_item_in_list(datalist):
-        keys = datalist[0].keys()
+    keys = datalist[0].keys()
 
-        with open('./worldcam_eu2.csv', 'w', encoding='utf_8_sig', newline='') as f:
-            dict_writer = csv.DictWriter(f, keys, dialect='excel', delimiter=';')
-            dict_writer.writeheader()
-            dict_writer.writerows(datalist)
+    with open('./worldcam_eu2.csv', 'w', encoding='utf_8_sig', newline='') as f:
+        dict_writer = csv.DictWriter(f, keys, dialect='excel', delimiter=';')
+        dict_writer.writeheader()
+        dict_writer.writerows(datalist)
