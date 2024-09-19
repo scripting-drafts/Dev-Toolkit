@@ -29,7 +29,7 @@ class Logger:
         logger.setLevel(logging.DEBUG)
         ch = logging.StreamHandler()
         ch.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s,%(msecs)03d {}{}[%(name)s]{}{} %(levelname)s %(message)s'.format(bold, g1, g0, reset), '%H:%M:%S')
+        formatter = logging.Formatter('%(asctime)s,%(msecs)03d {}{}[%(name)s]{}{} %(message)s'.format(bold, g1, g0, reset), '%H:%M:%S')
         ch.setFormatter(formatter)
         logger.addHandler(ch)
 

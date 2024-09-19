@@ -5,14 +5,15 @@ from bs4 import BeautifulSoup
 import colorama
 import csv
 import string
-from turquoise_logger import Logger
+from st_logger import Logger
+from tqdm import tqdm
 
 log = Logger().logging()
 colorama.init()
 GREEN = colorama.Fore.GREEN
 GRAY = colorama.Fore.LIGHTBLACK_EX
 RESET = colorama.Fore.RESET
-YELLOW = colorama.Fore.YELLOW
+RED = colorama.Fore.RED
 
 first_level_links = set()
 second_level_links = set()
@@ -45,7 +46,7 @@ def plus_one_item_in_list(list):
         else:
             r = True
     except Exception as e:
-        log.debug("Error: %s", e)
+        log.error(f'{RED}[!]Error: {e}{RESET}')
 
     return r
 
@@ -84,12 +85,12 @@ def move_page(url, status_code, notfounderrors):
 
 def get_all_website_links(url, pattern_level='third_level', links_level=third_level_links):
     '''Returns all URLs that is found on `url` in which it belongs to the same website'''
-    url = url + '/list/V/4/0'
+    url = url + '/list/Q/4/0'   #################################
     notfounderrors = 0
     done_flag = None
 
     while True:
-        log.debug(f"{GRAY}[*] Crawling: {url}{RESET}")
+        log.info(f"{GRAY}[*] Crawling: {url}{RESET}")
         response = requests.get(url, allow_redirects=False)
         sc = response.status_code
 
@@ -104,19 +105,21 @@ def get_all_website_links(url, pattern_level='third_level', links_level=third_le
                     ## Remove URL GET parameters, URL fragments, etc.
                     href = parsed_href.scheme + "://" + parsed_href.netloc + parsed_href.path
 
-                    if is_valid(href):
-                        if re.match(patterns[pattern_level], href):
-                            log.debug(f"{GREEN}[*] Internal link: {href}{RESET}")
-                            links_level.add(href)
+                    if href not in links_level:
+                        if is_valid(href):
+                            if re.match(patterns[pattern_level], href):
+                                log.debug(f"{GREEN}[*] Internal link: {href}{RESET}")
+                                links_level.add(href)
                             
         elif sc == 302:
             if notfounderrors < 3:
                 notfounderrors += 1
 
-                if notfounderrors == 1:
-                    log.debug(f'[{notfounderrors}] Next page incoming')
+                # DEBUGGING
+                # if notfounderrors == 1:
+                #     log.debug(f'[{notfounderrors}] Next page incoming')
             else:
-                log.debug(f'[{notfounderrors}] Status Code: 302')
+                log.info(f'{GRAY}[{notfounderrors}] Status Code: 302 {RESET}')
                 done_flag = True
                 notfounderrors = 0                
         else:
@@ -124,12 +127,10 @@ def get_all_website_links(url, pattern_level='third_level', links_level=third_le
                 raise AssertionError('URL not found')
 
         if done_flag is True:
-            log.debug(f'Stopped @ {url}')
+            log.info(f'{GRAY} Stopped @ {url} {RESET}')
             break
 
         url, done_flag, notfounderrors = move_page(url, sc, notfounderrors)
-
-    print(links_level)
 
     add_to_csv(list(links_level))
     
@@ -142,28 +143,31 @@ all_links = []
 datalist = []
 
 def add_to_csv(links):
-    for url in links:
+    log.info(f'{GRAY}[&] Parsing links {RESET}')
+    for url in tqdm(links):
         data = {}
         if url.startswith('https://worldcam.eu/webcams/'):
-            sub_folder = url.lstrip('https://worldcam.eu/webcams/')
-            split_url = sub_folder.split('/')
+            url_parts = url.split('webcams/')[1:]
+            url_parts = url_parts[0].split('/')
 
-            if not any(d['url'] == url for d in datalist) and split_url[2:]:
-                data['region'] = split_url[0]
-                data['country'] = split_url[1]
+            if not any(d['url'] == url for d in datalist):
+                data['region'] = url_parts[0].replace('-', ' ')
+                data['country'] = url_parts[1].replace('-', ' ')
 
-                # if len(split_url) > 2:
-                if not plus_one_item_in_list(split_url):
-                    loc_name_and_ref = split_url[2]
-                    data['zone'] = loc_name_and_ref
-                    data['ref'] = loc_name_and_ref
-                else:
-                    loc_name_and_ref = split_url[2].split('-')
+                if len(url_parts) > 2:
+                    loc_name_and_ref = url_parts[2].split('-')
                     data['zone'] = ' '.join(loc_name_and_ref[1:])
                     data['ref'] = loc_name_and_ref[0]
+                    well_parsed = True
+
+                # DEBUGGING
+                else:
+                    log.error(f'{RED}[!] Could not parse: \n {url}{RESET}')
+                    continue
 
                 data['url'] = url
-                datalist.append(data)
+        
+        datalist.append(data)
 
 def add_region_to_urls(url, regions_list):
     '''Append regions to URL'''
@@ -199,14 +203,14 @@ def crawl(url='https://worldcam.eu/webcams/', regions_list=['Europe'],
         get_all_website_links(u, 'third_level', third_level_links)
         
     else:
-        log.error(f'urls List is empty: {urls}')
+        log.error(f'{RED}[!]urls List is empty: {urls}{RESET}')
 
 
 try:
     if __name__ == "__main__":
         crawl()
-        log.debug(f"[+] Third Level links: {len(third_level_links)}")
-        log.debug(f"[+] Total crawled URLs: {urls_max_depth}")
+        log.info(f"[+] Third Level links: {len(third_level_links)}")
+        log.info(f"[+] Total crawled URLs: {urls_max_depth}")
 
 except Exception:
     keys = datalist[0].keys()
