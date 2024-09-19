@@ -85,7 +85,7 @@ def move_page(url, status_code, notfounderrors):
 
 def get_all_website_links(url, pattern_level='third_level', links_level=third_level_links):
     '''Returns all URLs that is found on `url` in which it belongs to the same website'''
-    url = url + '/list/Q/4/0'   #################################
+    url = url + '/list/A/4/0'
     notfounderrors = 0
     done_flag = None
 
