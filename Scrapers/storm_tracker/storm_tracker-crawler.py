@@ -206,6 +206,14 @@ def crawl(url='https://worldcam.eu/webcams/', regions_list=['Europe'],
         log.error(f'{RED}[!]urls List is empty: {urls}{RESET}')
 
 
+def write_to_csv(datalist):
+    keys = datalist[0].keys()
+
+    with open('./worldcam_eu.csv', 'w', encoding='utf_8_sig', newline='') as f:
+        dict_writer = csv.DictWriter(f, keys, dialect='excel', delimiter=';')
+        dict_writer.writeheader()
+        dict_writer.writerows(datalist)
+
 try:
     if __name__ == "__main__":
         crawl()
@@ -213,17 +221,6 @@ try:
         log.info(f"[+] Total crawled URLs: {urls_max_depth}")
 
 except Exception:
-    keys = datalist[0].keys()
-
-    with open('./worldcam_eu2.csv', 'w', encoding='utf_8_sig', newline='') as f:
-        dict_writer = csv.DictWriter(f, keys, dialect='excel', delimiter=';')
-        dict_writer.writeheader()
-        dict_writer.writerows(datalist)
-
+    write_to_csv(datalist)
 finally:
-    keys = datalist[0].keys()
-
-    with open('./worldcam_eu2.csv', 'w', encoding='utf_8_sig', newline='') as f:
-        dict_writer = csv.DictWriter(f, keys, dialect='excel', delimiter=';')
-        dict_writer.writeheader()
-        dict_writer.writerows(datalist)
+    write_to_csv(datalist)
