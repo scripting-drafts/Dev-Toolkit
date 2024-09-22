@@ -14,8 +14,8 @@ log = Logger().logging()
 datalist = []
 geolocation_pattern = re.compile('(-?\d+\.\d+?),(-?\d+\.\d+)')
 df = open('worldcam_eu.csv', newline='')
-csv_data = csv.reader(df, delimiter=';')
-headers = next(csv_data)
+csv_datareader = csv.reader(df, delimiter=';')
+headers = next(csv_datareader, None)
 
 options = Options()
 options.add_argument('--headless')
@@ -60,10 +60,11 @@ def coords(zone='knokke heist beach', maps_url = 'https://www.google.com/maps/se
 
     return lat, lon
 
-def process_datalist(data=csv_data):
+def process_datalist(data=csv_datareader):
     first_run = True
+    csv_data = list(csv_datareader)
 
-    for row in tqdm(csv_data):
+    for row in tqdm(csv_data):    # Match[---:]
         lat, lon = coords(row[2], first_run = True) if first_run else coords(row[2], first_run = False)
         data = {}
 
@@ -82,7 +83,7 @@ def process_datalist(data=csv_data):
 def write_to_csv(datalist):
     keys = datalist[0].keys()
 
-    with open('./coords_europe.csv', 'w', encoding='utf_8_sig', newline='') as f:
+    with open('./coords_europeFROM146onwards.csv', 'w', encoding='utf_8_sig', newline='') as f:
         dict_writer = csv.DictWriter(f, keys, dialect='excel', delimiter=';')
         dict_writer.writeheader()
         dict_writer.writerows(datalist)
