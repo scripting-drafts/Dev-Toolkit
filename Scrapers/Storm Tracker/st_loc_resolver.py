@@ -39,7 +39,7 @@ driver = webdriver.Firefox(service=path_firefox_binary, options=options)
 driver.implicitly_wait(10)
 
 def coords(zone='knokke heist beach', country=None, maps_url = 'https://www.google.com/maps/search/', first_run = True):
-    zone_transform = zone.replace(' ', '+') + ', ' + country.replace(' ', '+')
+    zone_transform = zone.replace(' ', '+') + ',+' + country.replace(' ', '+')
     url = f'{maps_url}{zone_transform}'
     driver.get(f'{url}')
 
@@ -64,8 +64,8 @@ def process_datalist(data=csv_datareader):
     first_run = True
     csv_data = list(csv_datareader)
 
-    for row in tqdm(csv_data[1589:]):    # Match[---:]
-        lat, lon = coords(row[2], first_run = True) if first_run else coords(row[2], first_run = False)
+    for row in tqdm(csv_data[1957:]):    # Match[1589:]1958
+        lat, lon = coords(zone=row[2], country=row[1], first_run=True) if first_run else coords(zone=row[2], country=row[1], first_run=False)
         data = {}
 
         data['region'] = row[0]
@@ -83,7 +83,7 @@ def process_datalist(data=csv_datareader):
 def write_to_csv(datalist):
     keys = datalist[0].keys()
 
-    with open('./coords_europeFROM146onwards.csv', 'w', encoding='utf_8_sig', newline='') as f:
+    with open('./coords_europe.csv', 'w', encoding='utf_8_sig', newline='') as f:
         dict_writer = csv.DictWriter(f, keys, dialect='excel', delimiter=';')
         dict_writer.writeheader()
         dict_writer.writerows(datalist)
