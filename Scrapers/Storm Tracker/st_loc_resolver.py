@@ -38,8 +38,8 @@ driver = webdriver.Firefox(service=path_firefox_binary, options=options)
 
 driver.implicitly_wait(10)
 
-def coords(zone='knokke heist beach', maps_url = 'https://www.google.com/maps/search/', first_run = True):
-    zone_transform = zone.replace(' ', '+')
+def coords(zone='knokke heist beach', country=None, maps_url = 'https://www.google.com/maps/search/', first_run = True):
+    zone_transform = zone.replace(' ', '+') + ', ' + country.replace(' ', '+')
     url = f'{maps_url}{zone_transform}'
     driver.get(f'{url}')
 
@@ -64,7 +64,7 @@ def process_datalist(data=csv_datareader):
     first_run = True
     csv_data = list(csv_datareader)
 
-    for row in tqdm(csv_data):    # Match[---:]
+    for row in tqdm(csv_data[1589:]):    # Match[---:]
         lat, lon = coords(row[2], first_run = True) if first_run else coords(row[2], first_run = False)
         data = {}
 

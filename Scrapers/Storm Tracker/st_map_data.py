@@ -3,7 +3,7 @@ import folium
 import pandas as pd
 # import branca
 
-df = pd.read_csv('../Samples/bulk1.csv', delimiter=';')
+df = pd.read_csv('Samples/bulkall.csv', delimiter=';')
 
 m = folium.Map(
     location=[45.4, 16.17],
@@ -57,4 +57,4 @@ for row in range(0, len(df.index)):
 # colormap.caption = 'Color per Comments, Radius per Stars Rate'
 # colormap.add_to(m)
 
-m.save('../Samples/1223map.html')
+m.save('Samples/mapbulkall.html')
