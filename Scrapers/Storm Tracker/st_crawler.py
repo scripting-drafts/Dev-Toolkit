@@ -182,7 +182,7 @@ def add_region_to_urls(url, regions_list):
 
     return urls
 
-def crawl(url='https://worldcam.eu/webcams/', regions_list=['Europe'],
+def crawl(url='https://worldcam.eu/webcams/', regions_list=['Asia'],
                  urls_max_depth=countries_max_depth):
     """
     Crawls a web page and extracts all links.
@@ -210,7 +210,7 @@ def crawl(url='https://worldcam.eu/webcams/', regions_list=['Europe'],
 def write_to_csv(datalist):
     keys = datalist[0].keys()
 
-    with open('./worldcam_eu.csv', 'w', encoding='utf_8_sig', newline='') as f:
+    with open('./worldcam_aa.csv', 'w', encoding='utf_8_sig', newline='') as f:
         dict_writer = csv.DictWriter(f, keys, dialect='excel', delimiter=';')
         dict_writer.writeheader()
         dict_writer.writerows(datalist)

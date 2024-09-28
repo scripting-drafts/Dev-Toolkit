@@ -13,7 +13,7 @@ from tqdm import tqdm
 log = Logger().logging()
 datalist = []
 geolocation_pattern = re.compile('(-?\d+\.\d+?),(-?\d+\.\d+)')
-df = open('worldcam_eu.csv', newline='')
+df = open('worldcam_aa.csv', newline='')
 csv_datareader = csv.reader(df, delimiter=';')
 headers = next(csv_datareader, None)
 
@@ -64,7 +64,7 @@ def process_datalist(data=csv_datareader):
     first_run = True
     csv_data = list(csv_datareader)
 
-    for row in tqdm(csv_data[1957:]):    # Match[1589:]1958
+    for row in csv_data:    # Match[1589:] [1957:]
         lat, lon = coords(zone=row[2], country=row[1], first_run=True) if first_run else coords(zone=row[2], country=row[1], first_run=False)
         data = {}
 
@@ -77,13 +77,13 @@ def process_datalist(data=csv_datareader):
         data['ref'] = row[3]
 
         datalist.append(data)
-        log.debug('DONE: {}'.format(data['url']))
+        log.debug('DONE {} of {}: {}'.format(csv_data.index(row), len(csv_data), data['url']))
         first_run = False
 
 def write_to_csv(datalist):
     keys = datalist[0].keys()
 
-    with open('./coords_europe.csv', 'w', encoding='utf_8_sig', newline='') as f:
+    with open('./coords_asia.csv', 'w', encoding='utf_8_sig', newline='') as f:
         dict_writer = csv.DictWriter(f, keys, dialect='excel', delimiter=';')
         dict_writer.writeheader()
         dict_writer.writerows(datalist)
