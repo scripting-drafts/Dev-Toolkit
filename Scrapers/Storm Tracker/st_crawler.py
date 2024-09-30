@@ -159,7 +159,6 @@ def add_to_csv(links):
                     loc_name_and_ref = url_parts[2].split('-')
                     data['zone'] = ' '.join(loc_name_and_ref[1:])
                     data['ref'] = loc_name_and_ref[0]
-                    well_parsed = True
 
                 # DEBUGGING
                 else:
