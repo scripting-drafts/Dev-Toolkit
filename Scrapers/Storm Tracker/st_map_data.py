@@ -28,7 +28,7 @@ m = folium.Map(
     # crs='EPSG4326',
     # tiles='https://tile.gbif.org/4326/omt/0/1/0@4x.png?style=gbif-natural-en',
     # tiles = f'http://localhost:8080/demo/wms/?srs=EPSG%3A4326&format=image%2Fpng&wms_layer=osm',
-    attr="<a href=https://github.com/scripting-drafts/>Endless Sky</a>"
+    attr="<a href=https://github.com/scripting-drafts/>scripting-drafts</a>"
 )
 
 def get_frame(url,url_frontend,img_url,width,height):
@@ -70,15 +70,15 @@ for row in range(0, len(df.index)):
     im = base64.b64decode(img_url.encode('utf_8_sig'))
     img = Image.open(BytesIO(im))
     # img.show(img)
-    buffer = img.resize((158,89))   # 210, 118
+    buffer = img.resize((210,118))   # 210,118 - 158,89
     
     buffered = BytesIO()
     buffer.save(buffered, format="JPEG")
     img_url = base64.b64encode(buffered.getvalue()).decode('utf_8_sig')
 
     html = '<img src="data:image/png;base64,{}"><p></p><a href="{}" target="_blank" >{}</a>'.format
-    iframe = folium.IFrame(html(img_url,url,url_frontend), width=210, height=167)  # Original 420 236
-    popup = folium.Popup(iframe, max_width=170)
+    iframe = folium.IFrame(html(img_url,url,url_frontend), width=245japan, height=180)  # Original 420 236
+    popup = folium.Popup(iframe, max_width=270)
 
     folium.CircleMarker(
         location=[lat, lon], #list(t.transform(lat, lon)),
