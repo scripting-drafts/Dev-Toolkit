@@ -1,0 +1,11 @@
+[Unit]
+Description=Sensors Service
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/pi/Desktop/sensor_files/water_sensors.py > /home/pi/Desktop/sensor_files/water_sensors_log.log 2>&1
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
